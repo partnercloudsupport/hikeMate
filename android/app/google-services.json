@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "315800161834",
+    "firebase_url": "https://geolocation-070818.firebaseio.com",
+    "project_id": "geolocation-070818",
+    "storage_bucket": "geolocation-070818.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:315800161834:android:e1ef71b7799f7d5b",
+        "android_client_info": {
+          "package_name": "com.termites.geolation"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "315800161834-rcal0icfcge0gip69tnpgosuf5sk5met.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBA08VJ9rBuoOVpkybdKnISv03jVOFiYg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
