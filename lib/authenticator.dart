@@ -38,7 +38,7 @@ class _State extends State<Authenticator> {
                         left: 20.0, right: 20.0, top: 10.0),
                     child: GestureDetector(
                       onTap: () {
-                        AuthManager.googleSignIn();
+                        authService.googleSignIn();
                         // Doing Pop and Push for the smooth closing animation
                         Navigator.of(context).pushReplacementNamed('/map');
                       },

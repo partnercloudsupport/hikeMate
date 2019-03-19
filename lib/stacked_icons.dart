@@ -42,7 +42,7 @@ class StakedIcons extends StatelessWidget {
           ),
         ),
         new Container(
-          margin: new EdgeInsets.only(left: 90.0, top: 40.0),
+          margin: new EdgeInsets.only(left: 100.0, top: 40.0),
           height: 60.0,
           width: 60.0,
           decoration: new BoxDecoration(

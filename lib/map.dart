@@ -9,18 +9,6 @@ import 'package:rxdart/rxdart.dart';
 import 'dart:async';
 import 'utils/authManager.dart';
 
-void main() => runApp(HikeMap());
-
-class HikeMap extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-        home: Scaffold(
-      body: FireMap(),
-    ));
-  }
-}
-
 class FireMap extends StatefulWidget {
   State createState() => FireMapState();
 }
@@ -28,6 +16,7 @@ class FireMap extends StatefulWidget {
 class FireMapState extends State<FireMap> {
   GoogleMapController mapController;
   Location location = new Location();
+  Map<String, dynamic> _profile;
 
   Firestore firestore = Firestore.instance;
   Geoflutterfire geo = Geoflutterfire();
@@ -39,7 +28,15 @@ class FireMapState extends State<FireMap> {
   // Subscription
   StreamSubscription subscription;
 
-  build(context) {
+  @override
+  initState() {
+    super.initState();
+
+    // Subscriptions are created here
+    authService.profile.listen((state) => setState(() => _profile = state));
+  }
+
+  Widget build(context) {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
@@ -62,7 +59,7 @@ class FireMapState extends State<FireMap> {
                       color: Colors.red,
                     ),
                     onTap: () {
-                      AuthManager.signOut();
+                      authService.signOut();
                       // Doing Pop and Push for the smooth closing animation
                       Navigator.of(context).pushReplacementNamed('/home');
                     },
@@ -117,17 +114,21 @@ class FireMapState extends State<FireMap> {
     var marker = MarkerOptions(
         position: mapController.cameraPosition.target,
         icon: BitmapDescriptor.defaultMarker,
-        infoWindowText: InfoWindowText('Magic Marker', '🍄'));
+        infoWindowText: InfoWindowText(authService.username, '🍄🍄🍄'));
 
     mapController.addMarker(marker);
   }
 
-  _animateToUser() async {
-    var pos = await location.getLocation();
-    mapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-      target: LatLng(pos['latitude'], pos['longitude']),
-      zoom: 17.0,
-    )));
+  // _animateToUser() async {
+  //   var pos = await location.getLocation();
+  //   mapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+  //     target: LatLng(pos['latitude'], pos['longitude']),
+  //     zoom: 17.0,
+  //   )));
+  // }
+
+  _markerName() {
+    return _profile['displayName'].toString().toUpperCase();
   }
 
   // Set GeoLocation Data
@@ -137,7 +138,7 @@ class FireMapState extends State<FireMap> {
         geo.point(latitude: pos['latitude'], longitude: pos['longitude']);
     return firestore
         .collection('locations')
-        .add({'position': point.data, 'name': 'Found!'});
+        .add({'position': point.data, 'name': authService.username});
   }
 
   void _updateMarkers(List<DocumentSnapshot> documentList) {
@@ -146,11 +147,12 @@ class FireMapState extends State<FireMap> {
     documentList.forEach((DocumentSnapshot document) {
       GeoPoint pos = document.data['position']['geopoint'];
       double distance = document.data['distance'];
+      // String name = document.data['name'];
       var marker = MarkerOptions(
           position: LatLng(pos.latitude, pos.longitude),
           icon: BitmapDescriptor.defaultMarker,
           infoWindowText: InfoWindowText(
-              'Magic Marker', '$distance kilometers from query center'));
+              authService.username, '$distance kilometers from me'));
 
       mapController.addMarker(marker);
     });
