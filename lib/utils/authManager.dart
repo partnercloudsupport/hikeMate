@@ -16,7 +16,6 @@ class AuthService {
   Observable<Map<String, dynamic>> profile; //custom data in firebase
   Observable<FirebaseUser> user; // firebase user
   Observable<DocumentSnapshot> location;
-  PublishSubject loading = PublishSubject();
   String _username;
 
   // getter for username
@@ -40,7 +39,7 @@ class AuthService {
 
   Future<FirebaseUser> googleSignIn() async {
     //start
-    loading.add(true);
+    // loading.add(true);
 
     //signIn with google account
     GoogleSignInAccount googleUser = await _googleSignIn.signIn();
@@ -52,7 +51,7 @@ class AuthService {
 
     updateUserData(user);
 
-    loading.add(false);
+    // loading.add(false);
     // print("signed in " + user.displayName);
     _username = user.displayName;
     return user;

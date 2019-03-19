@@ -72,7 +72,7 @@ class FireMapState extends State<FireMap> {
         body: Stack(children: [
           GoogleMap(
             initialCameraPosition:
-                CameraPosition(target: LatLng(24.142, -110.321), zoom: 15),
+                CameraPosition(target: LatLng(5.55602, -0.1969), zoom: 15),
             onMapCreated: _onMapCreated,
             myLocationEnabled: true,
             mapType: MapType.hybrid,
@@ -114,7 +114,7 @@ class FireMapState extends State<FireMap> {
     var marker = MarkerOptions(
         position: mapController.cameraPosition.target,
         icon: BitmapDescriptor.defaultMarker,
-        infoWindowText: InfoWindowText(authService.username, '🍄🍄🍄'));
+        infoWindowText: InfoWindowText(_markerName(), '🍄🍄🍄'));
 
     mapController.addMarker(marker);
   }
@@ -133,12 +133,17 @@ class FireMapState extends State<FireMap> {
 
   // Set GeoLocation Data
   Future<DocumentReference> _addGeoPoint() async {
+    // DocumentReference nameInLocations = firestore.collection('locations').document();
+    // String name = nameInLocations.data['name'];
     var pos = await location.getLocation();
     GeoFirePoint point =
         geo.point(latitude: pos['latitude'], longitude: pos['longitude']);
     return firestore
         .collection('locations')
-        .add({'position': point.data, 'name': authService.username});
+        .add({'position': point.data, 'name': 
+        // name
+        _markerName()
+        });
   }
 
   void _updateMarkers(List<DocumentSnapshot> documentList) {
@@ -147,12 +152,12 @@ class FireMapState extends State<FireMap> {
     documentList.forEach((DocumentSnapshot document) {
       GeoPoint pos = document.data['position']['geopoint'];
       double distance = document.data['distance'];
-      // String name = document.data['name'];
+      String name = document.data['name'];
       var marker = MarkerOptions(
           position: LatLng(pos.latitude, pos.longitude),
           icon: BitmapDescriptor.defaultMarker,
           infoWindowText: InfoWindowText(
-              authService.username, '$distance kilometers from me'));
+              name, '$distance kilometers from me'));
 
       mapController.addMarker(marker);
     });
