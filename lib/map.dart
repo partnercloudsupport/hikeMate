@@ -133,17 +133,11 @@ class FireMapState extends State<FireMap> {
 
   // Set GeoLocation Data
   Future<DocumentReference> _addGeoPoint() async {
-    // DocumentReference nameInLocations = firestore.collection('locations').document();
-    // String name = nameInLocations.data['name'];
     var pos = await location.getLocation();
     GeoFirePoint point =
         geo.point(latitude: pos['latitude'], longitude: pos['longitude']);
-    return firestore
-        .collection('locations')
-        .add({'position': point.data, 'name': 
-        // name
-        _markerName()
-        });
+    return firestore.collection('locations').add(
+        {'position': point.data, 'name': authService.username.toUpperCase()});
   }
 
   void _updateMarkers(List<DocumentSnapshot> documentList) {
@@ -156,8 +150,7 @@ class FireMapState extends State<FireMap> {
       var marker = MarkerOptions(
           position: LatLng(pos.latitude, pos.longitude),
           icon: BitmapDescriptor.defaultMarker,
-          infoWindowText: InfoWindowText(
-              name, '$distance kilometers from me'));
+          infoWindowText: InfoWindowText(name, '$distance kilometers from me'));
 
       mapController.addMarker(marker);
     });
